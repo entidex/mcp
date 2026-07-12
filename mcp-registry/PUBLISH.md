@@ -5,9 +5,9 @@
 The registry entry (`server.json`) and npm must never drift: `server.json` `version`
 and its `packages[]` reference must equal `packages/mcp-setup/package.json` `version`,
 and the npm package's `mcpName` must equal the server name (`com.entidex/entidex`).
-The `publish-mcp` GitHub Actions workflow (`.github/workflows/publish-mcp.yml`)
+The `publish` GitHub Actions workflow (`.github/workflows/publish.yml`)
 enforces this before publishing — prefer it over a manual publish once its secrets
-(`NPM_TOKEN`, `MCP_PUBLISHER_PRIVATE_KEY`) are provisioned.
+(`NPM_TOKEN`, `MCP_PUBLISHER_PRIVATE_KEY`) are provisioned on this repo.
 
 ## Sequencing (IMPORTANT)
 
@@ -92,7 +92,7 @@ domain ownership — no GitHub namespace needed.
   *evaluation* story is the public demo key, which is named in the header description;
   it already ships in the published `@entidex/mcp-setup` package, so this is not a
   new disclosure.
-- `repository.url` points at `dea-mon/entidex` — the repo that actually exists (the
-  previous entry referenced `Entidex/MiloSays`, a 404). The repo is currently private,
-  so the link 404s for the public; a public home for the publishable packages is an
-  open owner decision (also gates npm `--provenance`).
+- `repository.url` points at `entidex/mcp` — the public home for the publishable
+  packages (the previous entry referenced `Entidex/MiloSays`, a 404). Because the
+  repo is public, the workflow publishes with npm `--provenance`
+  (see `.github/workflows/publish.yml`).
