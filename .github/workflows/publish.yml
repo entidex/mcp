@@ -1,0 +1,119 @@
+# Publish the Entidex distribution — npm packages + official MCP Registry entry.
+#
+# Public-repo home for the publishable packages, so `npm publish --provenance`
+# works (provenance requires a public source repo + id-token). Manual
+# (workflow_dispatch) and inert until secrets are provisioned:
+#   NPM_TOKEN                  — npm automation token (org-owned account preferred)
+#   MCP_PUBLISHER_PRIVATE_KEY  — Ed25519 private key for `mcp-publisher login dns`
+#                                (DNS TXT record on entidex.com apex — see mcp-registry/PUBLISH.md)
+#
+# Invariant enforced before any publish: the registry entry version and its
+# packages[] reference must exactly match packages/mcp-setup/package.json — the
+# registry can never drift from npm again.
+
+name: publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish_mcp_setup:
+        description: 'npm publish @entidex/mcp-setup'
+        type: boolean
+        default: false
+      publish_sdk:
+        description: 'npm publish @entidex/sdk'
+        type: boolean
+        default: false
+      publish_entidex_meta:
+        description: 'npm publish entidex (unscoped meta-package)'
+        type: boolean
+        default: false
+      publish_registry:
+        description: 'mcp-publisher publish (official MCP Registry)'
+        type: boolean
+        default: true
+
+# id-token: write is required for npm --provenance.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Verify registry ↔ npm version alignment
+        run: |
+          node -e '
+            const fs = require("fs");
+            const strip = (s) => s.replace(/^﻿/, "");
+            const server = JSON.parse(strip(fs.readFileSync("mcp-registry/server.json", "utf8")));
+            const pkg = JSON.parse(strip(fs.readFileSync("packages/mcp-setup/package.json", "utf8")));
+            const fail = (m) => { console.error("ALIGNMENT FAIL: " + m); process.exit(1); };
+            if (server.version !== pkg.version) fail(`server.json version ${server.version} != @entidex/mcp-setup ${pkg.version}`);
+            const ref = (server.packages || []).find((p) => p.identifier === "@entidex/mcp-setup");
+            if (!ref) fail("server.json packages[] does not reference @entidex/mcp-setup");
+            if (ref.version !== pkg.version) fail(`packages[] version ${ref.version} != @entidex/mcp-setup ${pkg.version}`);
+            if (pkg.mcpName !== server.name) fail(`mcpName ${pkg.mcpName} != server name ${server.name}`);
+            console.log("aligned at", pkg.version);
+          '
+
+      - name: Publish @entidex/mcp-setup
+        if: ${{ inputs.publish_mcp_setup }}
+        working-directory: packages/mcp-setup
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @entidex/sdk
+        if: ${{ inputs.publish_sdk }}
+        working-directory: packages/sdk
+        run: |
+          npm install --no-audit --no-fund typescript
+          npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish entidex (meta-package)
+        if: ${{ inputs.publish_entidex_meta }}
+        working-directory: packages/entidex
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # The registry fetches the npm tarball to verify mcpName, so mcp-setup must
+      # be *served* by npm before we publish the registry entry. npm CDN
+      # propagation can lag seconds-to-a-minute after `npm publish` returns —
+      # poll until the target version is live to avoid "Registry validation
+      # failed for package".
+      - name: Wait for @entidex/mcp-setup to be live on npm
+        if: ${{ inputs.publish_registry }}
+        run: |
+          VER=$(node -e 'const fs=require("fs");console.log(JSON.parse(fs.readFileSync("packages/mcp-setup/package.json","utf8").replace(/^﻿/,"")).version)')
+          echo "Waiting for @entidex/mcp-setup@$VER to be served by npm…"
+          for i in $(seq 1 30); do
+            LIVE=$(npm view "@entidex/mcp-setup@$VER" version 2>/dev/null || true)
+            if [ "$LIVE" = "$VER" ]; then echo "live after ~$((i*10))s"; exit 0; fi
+            echo "  attempt $i/30: not yet (got '${LIVE:-none}') — sleeping 10s"
+            sleep 10
+          done
+          echo "timed out after 5m waiting for npm to serve $VER"; exit 1
+
+      - name: Publish to the official MCP Registry
+        if: ${{ inputs.publish_registry }}
+        working-directory: mcp-registry
+        run: |
+          curl -fsSL -o mcp-publisher.tar.gz \
+            "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz"
+          tar -xzf mcp-publisher.tar.gz mcp-publisher
+          ./mcp-publisher login dns --domain entidex.com --private-key "$MCP_PUBLISHER_PRIVATE_KEY"
+          ./mcp-publisher publish
+        env:
+          MCP_PUBLISHER_PRIVATE_KEY: ${{ secrets.MCP_PUBLISHER_PRIVATE_KEY }}

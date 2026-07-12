@@ -1,0 +1,57 @@
+{
+  "name": "@entidex/sdk",
+  "version": "0.3.0",
+  "description": "Signed, verifiable entity ground truth — resolve any entity and read its verified record, per-engine AI accuracy, and information lag in one call.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "entidex",
+    "entity-intelligence",
+    "ai-visibility",
+    "geo",
+    "aeo",
+    "sdk",
+    "api-client",
+    "typescript",
+    "mcp",
+    "model-context-protocol",
+    "knowledge-statement",
+    "ai-accuracy",
+    "knowledge-graph",
+    "entity-resolution"
+  ],
+  "author": "Entidex <hello@entidex.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/entidex/mcp.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://entidex.com/developers",
+  "bugs": "https://entidex.com/contact",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "typescript": "^7.0.2"
+  }
+}

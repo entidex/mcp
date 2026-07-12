@@ -1,0 +1,37 @@
+{
+  "name": "@entidex/mcp-setup",
+  "version": "1.0.4",
+  "mcpName": "com.entidex/entidex",
+  "description": "One-command installer for the Entidex MCP server — signed, verified entity ground truth in Claude Desktop, Cursor, or VS Code.",
+  "bin": {
+    "entidex-mcp-setup": "bin/setup.mjs"
+  },
+  "type": "module",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "entidex",
+    "entity-intelligence",
+    "claude",
+    "cursor",
+    "vscode",
+    "ai-visibility"
+  ],
+  "author": "Entidex <hello@entidex.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/entidex/mcp.git",
+    "directory": "packages/mcp-setup"
+  },
+  "homepage": "https://entidex.com/developers/mcp",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "entidex",
+  "version": "1.0.0",
+  "description": "Entidex — signed, verifiable entity ground truth for AI. `npx entidex` sets up the Entidex MCP server in Claude Desktop, Claude Code, Cursor, or VS Code.",
+  "bin": {
+    "entidex": "bin/entidex.mjs"
+  },
+  "type": "module",
+  "keywords": [
+    "entidex",
+    "mcp",
+    "mcp-server",
+    "model-context-protocol",
+    "entity-intelligence",
+    "knowledge-statement",
+    "ai-accuracy",
+    "ai-visibility",
+    "claude",
+    "cursor",
+    "vscode"
+  ],
+  "dependencies": {
+    "@entidex/mcp-setup": "^1.0.4"
+  },
+  "author": "Entidex <hello@entidex.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/entidex/mcp.git",
+    "directory": "packages/entidex"
+  },
+  "homepage": "https://entidex.com/developers",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ]
+}
