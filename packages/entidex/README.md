@@ -16,7 +16,7 @@ It delegates to [`@entidex/mcp-setup`](https://www.npmjs.com/package/@entidex/mc
 
 ```bash
 npx entidex --client claude-code     # non-interactive per-client setup
-npx entidex --demo                   # public demo key (reference cohort: Tesla, Elon Musk, PBD Podcast)
+npx entidex --demo                   # public demo key (reference cohort of 21 entities, e.g. Tesla, OpenAI, Elon Musk)
 npx entidex --uninstall              # remove Entidex from a client config
 ```
 

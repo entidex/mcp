@@ -21,7 +21,7 @@ import { execSync } from 'node:child_process';
 
 const MCP_URL = 'https://entidex.com/api/mcp';
 const SERVER_NAME = 'entidex';
-const DEMO_KEY = 'entx_demo_sk_oo35PvnqmtFMoW7JRpOnLTkVVFBi9IFe';
+const DEMO_KEY = 'entx_demo_sk_Gcl4LTyMMHrHicdVs803xz23r7s03SWV';
 
 // ── Argument parsing ────────────────────────────────────────────────
 
@@ -218,7 +218,7 @@ async function main() {
   let apiKey = option('key');
   if (flag('demo')) {
     apiKey = DEMO_KEY;
-    log('Using demo key (reference cohort: Tesla, Elon Musk, PBD Podcast)');
+    log('Using demo key (reference cohort of 21 entities, e.g. Tesla, OpenAI, Elon Musk)');
   }
   if (!apiKey) {
     console.log();

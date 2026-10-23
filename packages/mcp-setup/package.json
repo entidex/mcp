@@ -1,6 +1,6 @@
 {
   "name": "@entidex/mcp-setup",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "mcpName": "com.entidex/entidex",
   "description": "One-command installer for the Entidex MCP server — signed, verified entity ground truth in Claude Desktop, Cursor, or VS Code.",
   "bin": {

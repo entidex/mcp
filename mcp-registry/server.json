@@ -3,7 +3,7 @@
   "name": "com.entidex/entidex",
   "title": "Entidex — Entity Intelligence & AI Knowledge Correction",
   "description": "Entity intelligence across AI surfaces. Read the verified record and submit corrections.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "status": "active",
   "repository": {
     "url": "https://github.com/entidex/mcp",
@@ -17,7 +17,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Bearer token — your Entidex API key (entx_live_sk_...). No account is needed to evaluate: use the public demo key entx_demo_sk_oo35PvnqmtFMoW7JRpOnLTkVVFBi9IFe (read + correction access to the reference cohort — Tesla, Elon Musk, PBD Podcast), or run `npx @entidex/mcp-setup --demo` to configure it automatically. Free and paid keys: https://entidex.com/developers",
+          "description": "Bearer token — your Entidex API key (entx_live_sk_...). No account is needed to evaluate: use the public demo key entx_demo_sk_Gcl4LTyMMHrHicdVs803xz23r7s03SWV (read + correction access to the the 21-entity reference cohort, e.g. Tesla, OpenAI, Elon Musk), or run `npx @entidex/mcp-setup --demo` to configure it automatically. Free and paid keys: https://entidex.com/developers",
           "isRequired": true,
           "isSecret": true
         }
@@ -29,7 +29,7 @@
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@entidex/mcp-setup",
-      "version": "1.0.4",
+      "version": "1.0.5",
       "transport": {
         "type": "stdio"
       },

@@ -20,7 +20,7 @@
     "vscode"
   ],
   "dependencies": {
-    "@entidex/mcp-setup": "^1.0.4"
+    "@entidex/mcp-setup": "^1.0.5"
   },
   "author": "Entidex <hello@entidex.com>",
   "license": "MIT",
