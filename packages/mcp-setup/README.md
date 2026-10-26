@@ -18,7 +18,7 @@ Interactive mode: detects installed clients, prompts for your API key, writes th
 # Specify client and key directly
 npx @entidex/mcp-setup --client claude-desktop --key entx_live_sk_...
 
-# Use the demo key (reference cohort: Tesla, Elon Musk, PBD Podcast)
+# Use the demo key (reference cohort of 21 entities, e.g. Tesla, OpenAI, Elon Musk)
 npx @entidex/mcp-setup --client cursor --demo
 
 # Claude Code (runs `claude mcp add` for you)
@@ -48,7 +48,7 @@ npx @entidex/mcp-setup --client claude-desktop --uninstall
 
 ## Demo key
 
-Press Enter when prompted for a key (or pass `--demo`) to use the shared demo key. It grants read access to a small reference cohort (Tesla, Elon Musk, PBD Podcast) with no account needed — for evaluation only.
+Press Enter when prompted for a key (or pass `--demo`) to use the shared demo key. It grants read access to a small reference cohort (21 entities, e.g. Tesla, OpenAI, Elon Musk) with no account needed — for evaluation only.
 
 ## Tools available after setup
 

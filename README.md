@@ -16,7 +16,7 @@ public repo is what lets the npm publishes carry
 
 ```bash
 npx @entidex/mcp-setup          # configure the MCP server, prompts for your key
-npx @entidex/mcp-setup --demo   # public demo key, reference cohort (Tesla, Elon Musk, PBD Podcast)
+npx @entidex/mcp-setup --demo   # public demo key, reference cohort (21 entities, e.g. Tesla, OpenAI, Elon Musk)
 ```
 
 - **MCP server:** `https://entidex.com/api/mcp` (streamable HTTP, Bearer auth)
