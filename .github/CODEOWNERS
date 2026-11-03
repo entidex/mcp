@@ -1,0 +1,24 @@
+# Code owners for protected paths (agent-workflow.md §4).
+# With branch protection's "Require review from Code Owners" turned on, a PR that
+# touches any path below cannot merge without an approving review from an owner.
+# PR authors cannot approve their own PRs, so a PR opened by one owner needs the other.
+
+# Ownership rules
+/.github/CODEOWNERS                 @entidex @dea-mon
+/.github/workflows/                 @entidex @dea-mon
+/.github/scripts/                   @entidex @dea-mon
+/CLAUDE.md                          @entidex @dea-mon
+/agent-workflow.md                  @entidex @dea-mon
+/.claude/                           @entidex @dea-mon
+
+# Release config and version files
+/mcp-registry/                      @entidex @dea-mon
+/packages/*/package.json            @entidex @dea-mon
+
+# Paths named in §4 that don't exist yet, owned in advance
+/deploy/                            @entidex @dea-mon
+/infra/                             @entidex @dea-mon
+/migrations/                        @entidex @dea-mon
+/schema/                            @entidex @dea-mon
+Dockerfile*                         @entidex @dea-mon
+Makefile                            @entidex @dea-mon

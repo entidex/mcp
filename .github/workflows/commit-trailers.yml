@@ -1,0 +1,26 @@
+# Enforce agent provenance trailers (agent-workflow.md §3) on PRs into main.
+# Make this a required status check in branch protection for it to block merges.
+name: commit-trailers
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Check provenance trailers
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.head_ref }}
+        run: .github/scripts/check-trailers.sh "$BASE_SHA" "$HEAD_SHA" "$HEAD_REF"
