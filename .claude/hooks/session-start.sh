@@ -1,6 +1,6 @@
 #!/bin/bash
-# SessionStart hook: sync with origin, report the base SHA, load the agent
-# workflow rules into context, and (cloud sessions only) install SDK deps.
+# SessionStart hook: sync with origin, report the base SHA, and (cloud sessions
+# only) install SDK deps. The agent rules load via CLAUDE.md, not this hook.
 # Stdout from this hook is added to the session's context.
 set -euo pipefail
 
@@ -45,11 +45,7 @@ if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] && command -v npm >/dev/null; then
   fi
 fi
 
-# 3. Load the agent workflow rules into context.
-if [ -f agent-workflow.md ]; then
-  echo "## Agent workflow rules (agent-workflow.md). Follow these for every task."
-  echo
-  cat agent-workflow.md
-else
-  echo "WARNING: agent-workflow.md not found at repo root."
+# The workflow rules themselves are loaded natively via CLAUDE.md (@agent-workflow.md).
+if [ ! -f agent-workflow.md ]; then
+  echo "WARNING: agent-workflow.md not found at repo root; CLAUDE.md cannot load the agent rules."
 fi

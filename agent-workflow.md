@@ -19,6 +19,7 @@ Read in full before touching the repo. These rules exist because Git contention 
 - Never share a worktree or branch with another agent. Never work on `main` directly.
 - Before starting: `git fetch origin && git rebase origin/main`. Note the resulting SHA as your `Base:`.
 - Gitignored dependencies (`node_modules`, `.env`, build caches) are not in a fresh worktree — link or copy them; never commit them.
+- **Cloud sessions (Claude Code on the web):** the platform clones the repo into a throwaway container and assigns a branch (e.g. `ccr-…`). That branch is your agent branch: use it as-is, don't create an `agent/…` branch or a worktree, and never push anywhere else. Every other rule still applies — record `Base:`, and the session-start hook reports it for you.
 
 ## 2. Scope — declare before you edit
 
@@ -75,17 +76,27 @@ Rules:
 
 ## 6. Deployment — from tags, reversible, never by task agents
 
+General rule, for repos that deploy a service:
+
 - Deploy only from a tagged commit on `main` (`vX.Y.Z`). Never from a branch, never from a working tree.
 - Ladder: `main` → CI gate → tag → staging/pilot → smoke check → production. Production is a human action.
 - Every deploy must be reversible before it starts: previous tag retained, rollback command known, data migrations forward-compatible or paired with a down-migration.
 - After deploy, read back: health endpoint, version endpoint reports the tag, one representative end-to-end check. Record the result.
-- Per-repo values (fill in once, keep current):
+
+**This repo (`entidex/mcp`) releases packages, not a service.** A release is an npm publish plus an MCP Registry publish, and both are owner-only:
+
+- Release only from `main`, by running the `publish` workflow (`.github/workflows/publish.yml`, manual `workflow_dispatch`). Never `npm publish` from a working tree. Agents never run it.
+- A release is a version bump landed on `main` via a normal PR (`packages/*/package.json`, and for `@entidex/mcp-setup` also `mcp-registry/server.json` — the workflow fails if they disagree). Version files are protected paths (§4).
+- **npm releases cannot be rolled back.** A published version is permanent (unpublish is limited and breaks dependants). "Reversible" here means: the previous version stays installable, and a bad release is fixed forward with a new patch version plus `npm deprecate` on the bad one.
+- Order matters: `@entidex/mcp-setup` must be live on npm before the registry publish (see `mcp-registry/PUBLISH.md`). The workflow enforces this.
+- Tag the released commit `<package>@<version>` (e.g. `@entidex/mcp-setup@1.0.5`) after a successful run, so every published version maps to a commit.
 
 ```
-DEPLOY_TARGETS:   <staging-host> → <production-host>
-DEPLOY_COMMAND:   <command or workflow name>
-ROLLBACK_COMMAND: <command or workflow name>
-SMOKE_CHECK:      <URL or script>
+DEPLOY_TARGETS:   npm (@entidex/mcp-setup, @entidex/sdk, entidex) → official MCP Registry (com.entidex/entidex)
+DEPLOY_COMMAND:   GitHub Actions workflow `publish` (manual, owner only)
+ROLLBACK_COMMAND: none — publish a fixed patch version, then `npm deprecate <pkg>@<bad-version> "<reason>"`
+SMOKE_CHECK:      `npm view <pkg>@<version> version` returns the version for each published package;
+                  the registry entry for com.entidex/entidex at https://registry.modelcontextprotocol.io shows it
 ```
 
 ## 7. Monitor / integrator agent duties
