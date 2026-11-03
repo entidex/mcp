@@ -44,6 +44,7 @@ Base: <base-sha>
 ```
 
 - These trailers are the provenance record. Do not omit them; do not fabricate them.
+- Put them in the **last paragraph** of the message, in the same block as any `Co-Authored-By:` lines, with no blank line in between. Otherwise git doesn't treat them as trailers and the `commit-trailers` CI check fails the PR.
 - Never commit: `.env*`, keys, tokens, certificates, client data, client names or numbers, third-party code without a compatible licence.
 
 ## 4. Protected paths — human approval required
